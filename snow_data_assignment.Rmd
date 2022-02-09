@@ -1,7 +1,7 @@
 ---
 title: "Snow Data Assignment: Web Scraping, Functions, and Iteration"
-author: "Nathan Mueller"
-date: "2-7-2022"
+author: "Laney Gordon"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output: html_document
 ---
 
@@ -140,7 +140,25 @@ ggplot(snow_yearly,aes(x=Year,y=mean_height,color=site)) +
 
 1. Extract the meteorological data URLs. Here we want you to use the `rvest` package to get the URLs for the `SASP forcing` and `SBSP_forcing` meteorological datasets.
 
+```{r}
+site_url <- 'https://snowstudies.org/archived-data/'
+
+webpage <- read_html(site_url)
+
+links <- webpage %>%
+  html_nodes('a') %>%
+  .[grepl('Forcing',.)] %>%
+  html_attr('href')
+
+links
+```
+
+
 2. Download the meteorological data. Use the `download_file` and `str_split_fixed` commands to download the data and save it in your data folder. You can use a for loop or a map function. 
+
+```{r}
+
+```
 
 3. Write a custom function to read in the data and append a site column to the data. 
 
