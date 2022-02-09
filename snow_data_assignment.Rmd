@@ -157,6 +157,16 @@ links
 2. Download the meteorological data. Use the `download_file` and `str_split_fixed` commands to download the data and save it in your data folder. You can use a for loop or a map function. 
 
 ```{r}
+splits <- str_split_fixed(links,'/',8)
+
+dataset<- splits[,8]
+
+file_names <- paste0('data/',dataset)
+
+for(i in 1:length(file_names)){
+  download.file(links[i],destfile = file_names[i])
+}
+
 
 ```
 
