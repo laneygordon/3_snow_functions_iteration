@@ -147,10 +147,10 @@ webpage <- read_html(site_url)
 
 links <- webpage %>%
   html_nodes('a') %>%
-  .[grepl('Forcing',.)] %>%
+  .[grepl('forcing',.)] %>%
   html_attr('href')
 
-links
+
 ```
 
 
@@ -161,11 +161,15 @@ splits <- str_split_fixed(links,'/',8)
 
 dataset<- splits[,8]
 
-file_names <- paste0('data/',dataset)
+Q2_file_names <- paste0('data/',dataset)
 
-for(i in 1:length(file_names)){
-  download.file(links[i],destfile = file_names[i])
+for(i in 1:3){
+  download.file(links[i],destfile=Q2_file_names[i])
 }
+
+downloaded <- file.exists(Q2_file_names)
+
+evaluate <- !all(downloaded)
 
 
 ```
@@ -174,7 +178,6 @@ for(i in 1:length(file_names)){
 
 ```{r}
 
-# this code grabs the variable names from the metadata pdf file
 library(pdftools)
 headers <- pdf_text('https://snowstudies.org/wp-content/uploads/2022/02/Serially-Complete-Metadata-text08.pdf') %>%
   readr::read_lines(.) %>%
@@ -184,14 +187,46 @@ headers <- pdf_text('https://snowstudies.org/wp-content/uploads/2022/02/Serially
   .[1:26] %>%
   str_trim(side = "left")
 
+our_meteor_reader <- function(file){
+  name = str_split_fixed(file,'/',2)[,2] %>%
+    gsub('_Forcing_Data.txt','',.)
+  df <- read.delim(file,header = FALSE, sep = "", col.names = headers) %>% 
+    select(year, month, air.temp..K.) 
+
+} 
+  
 ```
 
 4. Use the `map` function to read in both meteorological files. Display a summary of your tibble.
 
+```{r}
+meteor_data_full <- map_dfr(Q2_file_names,our_meteor_reader)
+
+summary(meteor_data_full)
+
+```
+
+
 5. Make a line plot of mean temp by year by site (using the `air temp [K]` variable). Is there anything suspicious in the plot? Adjust your filtering if needed.
+
+```{r}
+temp_yearly <- meteor_data_full %>%
+  group_by(year, 'air temp [K]') %>%
+  summarize(mean_temp = mean(air.temp..K., na.rm=T))
+
+ggplot(temp_yearly, aes(x = year, y = mean_temp, color = 'air temp [K]')) +
+  geom_point() +
+  ggthemes::theme_few() +
+  ggthemes::scale_color_few() 
+```
 
 6. Write a function that makes line plots of monthly average temperature at each site for a given year. Use a for loop to make these plots for 2005 to 2010. Are monthly average temperatures at the Senator Beck Study Plot ever warmer than the Snow Angel Study Plot?
 Hint: https://ggplot2.tidyverse.org/reference/print.ggplot.html
+
+```{r}
+
+```
+
 
 Bonus: Make a plot of average daily precipitation by day of year (averaged across all available years). Color each site. 
 
