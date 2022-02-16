@@ -93,7 +93,7 @@ summary(meteor_data_full)
 
 5. Make a line plot of mean temp by year by site (using the `air temp [K]` variable). Is there anything suspicious in the plot? Adjust your filtering if needed.
 
-```{r}
+```{r,message=F, fig.cap="Figure 1: Lines of the graph represent a time series of average monthly temperature in Kelvin at the Swamp Angel Study Plot and the Senator Beck Study Plot. The year 2003 was not recorded due to incomplete datasets."}
 temp_yearly <- meteor_data_full %>%
   filter(year > 2003) %>%
   group_by(year, site) %>%
@@ -105,7 +105,6 @@ ggplot(temp_yearly, aes(x = year, y = mean_temp, color=site)) +
   ggthemes::scale_color_few() +
   labs(x = "Year",
        y = "Average Temp (K)", 
-       caption = "Figure 1: Lines of the graph represent a time series of average monthly temperature in Kelvin at the Swamp Angel Study Plot and the Senator Beck Study Plot.",
      color="Site") +
   scale_color_manual(labels = c("Swamp Angel", "Senator Beck"), values=c("green", "pink")) +
      theme(legend.position = "bottom")
