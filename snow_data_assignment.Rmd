@@ -18,7 +18,7 @@ library(readxl)
 
 1. Extract the meteorological data URLs. Here we want you to use the `rvest` package to get the URLs for the `SASP forcing` and `SBSP_forcing` meteorological datasets.
 
-```{r}
+```{r, message=F}
 site_url <- 'https://snowstudies.org/archived-data/'
 
 webpage <- read_html(site_url)
@@ -34,7 +34,7 @@ links <- webpage %>%
 
 2. Download the meteorological data. Use the `download_file` and `str_split_fixed` commands to download the data and save it in your data folder. You can use a for loop or a map function. 
 
-```{r}
+```{r, message= F}
 splits <- str_split_fixed(links,'/',8)
 
 dataset<- splits[,8]
@@ -54,7 +54,7 @@ evaluate <- !all(downloaded)
 
 3. Write a custom function to read in the data and append a site column to the data. 
 
-```{r}
+```{r, message=F}
 
 library(pdftools)
 headers <- pdf_text('https://snowstudies.org/wp-content/uploads/2022/02/Serially-Complete-Metadata-text08.pdf') %>%
@@ -69,7 +69,7 @@ headers <- pdf_text('https://snowstudies.org/wp-content/uploads/2022/02/Serially
 
 
 
-```{r}
+```{r, message=F}
 our_meteor_reader <- function(Q3_file){
   name = str_split_fixed(Q3_file,'/',2)[,2] 
   name2 = str_split_fixed(Q3_file,'/',4)[,2] 
@@ -114,7 +114,7 @@ ggplot(temp_yearly, aes(x = year, y = mean_temp, color=site)) +
 6. Write a function that makes line plots of monthly average temperature at each site for a given year. Use a for loop to make these plots for 2005 to 2010. Are monthly average temperatures at the Senator Beck Study Plot ever warmer than the Snow Angel Study Plot?
 Hint: https://ggplot2.tidyverse.org/reference/print.ggplot.html
 
-
+Based on the plots, it appears that the largest differences in temperature occurs during the summer months and the smallest change occurs in fall months. Although, the Senator Beck Study plot is never warmer than the Swamp Angel Study Plot. 
 ```{r, message=F}
 lineplotter <- function(meteor_data_full, year) {
   temp_monthly <- meteor_data_full %>% 
@@ -138,7 +138,7 @@ for (yr in years) {
   lineplotter(meteor_data_full, year)
 }
 ```
-Based on the plots, it appears that the largest differences in temperature occurs during the summer months and the smallest change occurs in fall months. Although, the Senator Beck Study plot is never warmer than the Swamp Angel Study Plot. 
+
 
 Bonus: Make a plot of average daily precipitation by day of year (averaged across all available years). Color each site. 
 
