@@ -206,7 +206,6 @@ evaluate &lt;- !all(downloaded)</code></pre>
 </ol>
 <pre class="r"><code>library(pdftools)</code></pre>
 <pre><code>## Warning: package &#39;pdftools&#39; was built under R version 4.1.2</code></pre>
-<pre><code>## Using poppler version 21.04.0</code></pre>
 <pre class="r"><code>headers &lt;- pdf_text(&#39;https://snowstudies.org/wp-content/uploads/2022/02/Serially-Complete-Metadata-text08.pdf&#39;) %&gt;%
   readr::read_lines(.) %&gt;%
   trimws(.) %&gt;%
